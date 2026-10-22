@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Yanru Lei Project Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: slim text header per project, then the boards run full width, stacked; links close each project. */
+:root {
+  --bg: #eef0f3;
+  --surface: #ffffff;
+  --ink: #15171c;
+  --muted: #5d6470;
+  --line: #d3d7de;
+  --accent: #d9481f;   /* goldfish red */
+  --accent-2: #2f4fd8; /* projection blue */
+  --display: "Syne", "Avenir Next", system-ui, sans-serif;
+  --body: "Instrument Sans", "Helvetica Neue", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101217; --surface: #181b22; --ink: #eceef2; --muted: #9aa1ad; --line: #2a2f39;
+    --accent: #ff6a3d; --accent-2: #7d93ff; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101217; --surface: #181b22; --ink: #eceef2; --muted: #9aa1ad; --line: #2a2f39;
+  --accent: #ff6a3d; --accent-2: #7d93ff; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--body); font-size: 16px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.gutter {
+  max-width: 1600px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+a { color: var(--accent-2); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+/* Header */
+header.top { display: grid; gap: 20px; padding-block: 56px 40px; }
+.kicker { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 {
+  font-family: var(--display); font-weight: 800; margin: 0;
+  font-size: clamp(44px, 9vw, 104px); line-height: .92; letter-spacing: -.02em; text-wrap: balance;
+}
+h1 .dot { color: var(--accent); }
+.index { display: flex; flex-wrap: wrap; gap: 8px 24px; font-family: var(--mono); font-size: 13px; }
+.index a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 2px; }
+.index a:hover { border-color: var(--accent); }
+.index span { color: var(--muted); margin-right: 6px; }
+
+/* Projects */
+.project { padding-block: 56px 24px; border-top: 1px solid var(--line); }
+.project-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; padding-bottom: 24px; }
+.project-head h2 {
+  font-family: var(--display); font-weight: 800; margin: 0;
+  font-size: clamp(32px, 5.5vw, 56px); line-height: 1; letter-spacing: -.015em; text-wrap: balance;
+}
+.version { display: flex; align-items: center; gap: 12px; padding-block: 32px 16px; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.ver { font-weight: 500; color: var(--surface); background: var(--ink); padding: 2px 8px; border-radius: 3px; letter-spacing: .04em; }
+.ver.new { background: var(--accent); color: #fff; }
+
+/* Boards: full width of the viewport (capped on very wide screens) */
+.boards { display: grid; gap: 12px; max-width: 1800px; margin: 0 auto; }
+.boards button { all: unset; cursor: zoom-in; display: block; }
+.boards img { display: block; width: 100%; height: auto; max-width: 100%; }
+
+.links { display: grid; gap: 6px; padding-block: 28px 8px; font-size: 15px; }
+
+footer { margin-top: 64px; padding-block: 24px 64px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--muted); }
+
+/* Lightbox */
+.lb {
+  position: fixed; inset: 0; z-index: 50; background: rgba(8,9,12,.96);
+  display: grid; grid-template-rows: auto 1fr;
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+}
+.lb-bar { display: flex; justify-content: flex-end; padding: 12px 16px; }
+.lb-bar button { all: unset; cursor: pointer; padding: 6px 12px; border: 1px solid #444a55; border-radius: 999px; color: #e6e8ec; font-family: var(--mono); font-size: 12px; }
+.lb-stage { overflow: auto; display: grid; place-items: center; padding: 0 16px 16px; }
+.lb-stage img { max-width: 100%; max-height: calc(100vh - 80px); cursor: zoom-in; }
+.lb-stage.zoom { place-items: start; }
+.lb-stage.zoom img { max-width: none; max-height: none; cursor: zoom-out; }
+</style>
+</head>
+<body>
+
+<header class="top gutter">
+  <div class="kicker">Project log · Yanru Lei</div>
+  <h1>Yanru Lei<span class="dot">.</span></h1>
+  <nav class="index" aria-label="Projects">
+    <a href="#no-bowl"><span>01</span>There Is No Bowl</a>
+    <a href="#memo-quest"><span>02</span>Memo Quest</a>
+  </nav>
+</header>
+
+<!-- 01 There Is No Bowl -->
+<section class="project" id="no-bowl">
+  <div class="project-head gutter">
+    <h2>There Is No Bowl</h2>
+    <div class="kicker">Project 01 · Interactive installation · 2025</div>
+  </div>
+  <div class="boards">
+    <button data-src="img/bowl-p1.jpg" aria-label="Enlarge page 1"><img src="img/bowl-p1.jpg" alt="There Is No Bowl, page 1" width="2880" height="2161"></button>
+    <button data-src="img/bowl-p2.jpg" aria-label="Enlarge page 2"><img src="img/bowl-p2.jpg" alt="There Is No Bowl, page 2" loading="lazy" width="2880" height="2161"></button>
+    <button data-src="img/bowl-p3.jpg" aria-label="Enlarge page 3"><img src="img/bowl-p3.jpg" alt="There Is No Bowl, page 3" loading="lazy" width="2880" height="2161"></button>
+    <button data-src="img/bowl-p4.jpg" aria-label="Enlarge page 4"><img src="img/bowl-p4.jpg" alt="There Is No Bowl, page 4" loading="lazy" width="2880" height="2161"></button>
+  </div>
+  <div class="links gutter">
+    <div class="kicker">Links</div>
+    <a href="https://www.youtube.com/watch?v=ykli3yQgd0o" target="_blank" rel="noopener">Design process &amp; exhibition video</a>
+    <a href="https://youtu.be/FdJjHtZQEBo" target="_blank" rel="noopener">"Red Goldfish" animation</a>
+    <a href="https://youtu.be/N4I6V_U6BiU" target="_blank" rel="noopener">"Thailand Sea Fish" animation</a>
+    <a href="https://youtu.be/-Z4CaXKl5h4" target="_blank" rel="noopener">"Red Goldfish Jump into the Sea" animation</a>
+  </div>
+</section>
+
+<!-- 02 Memo Quest -->
+<section class="project" id="memo-quest">
+  <div class="project-head gutter">
+    <h2>Memo Quest</h2>
+    <div class="kicker">Project 02 · UI/UX app · 2025</div>
+  </div>
+  <div class="version gutter"><span class="ver">v1</span><span>Original</span></div>
+  <div class="boards">
+    <button data-src="img/mq-1.jpg" aria-label="Enlarge page 1"><img src="img/mq-1.jpg" alt="Memo Quest, page 1" loading="lazy" width="2880" height="1080"></button>
+    <button data-src="img/mq-2.jpg" aria-label="Enlarge page 2"><img src="img/mq-2.jpg" alt="Memo Quest, page 2" loading="lazy" width="2880" height="1080"></button>
+    <button data-src="img/mq-3.jpg" aria-label="Enlarge page 3"><img src="img/mq-3.jpg" alt="Memo Quest, page 3" loading="lazy" width="2880" height="1080"></button>
+    <button data-src="img/mq-4.jpg" aria-label="Enlarge page 4"><img src="img/mq-4.jpg" alt="Memo Quest, page 4" loading="lazy" width="2880" height="1080"></button>
+    <button data-src="img/mq-5.jpg" aria-label="Enlarge page 5"><img src="img/mq-5.jpg" alt="Memo Quest, page 5: Visualization of My World" loading="lazy" width="2880" height="1080"></button>
+  </div>
+  <div class="version gutter"><span class="ver new">v2</span><span>Update</span></div>
+  <div class="boards">
+    <button data-src="img/mq-update.jpg" aria-label="Enlarge Memo Quest update"><img src="img/mq-update.jpg" alt="Memo Quest update, Figma canvas" loading="lazy" width="1726" height="1344"></button>
+  </div>
+</section>
+
+<footer class="gutter">Yanru Lei · Tap any page to view it full screen</footer>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
+  <div class="lb-bar"><button id="lb-close" type="button">Close</button></div>
+  <div class="lb-stage" id="lb-stage"><img id="lb-img" alt=""></div>
+</div>
+
+<script>
+(() => {
+  const lb = document.getElementById('lb'), img = document.getElementById('lb-img'),
+        stage = document.getElementById('lb-stage');
+  let last = null;
+  document.querySelectorAll('.boards button').forEach(b => b.addEventListener('click', () => {
+    last = b;
+    img.src = b.dataset.src;
+    img.alt = b.querySelector('img').alt;
+    stage.classList.remove('zoom');
+    lb.hidden = false;
+    document.body.style.overflow = 'hidden';
+    document.getElementById('lb-close').focus();
+  }));
+  const close = () => { lb.hidden = true; document.body.style.overflow = ''; last && last.focus(); };
+  document.getElementById('lb-close').addEventListener('click', close);
+  img.addEventListener('click', e => { e.stopPropagation(); stage.classList.toggle('zoom'); });
+  stage.addEventListener('click', e => { if (e.target === stage) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !lb.hidden) close(); });
+})();
+</script>
+</body>
+</html>
